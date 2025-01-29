@@ -14,32 +14,35 @@ struct ContentView: View {
     @State private var player: AVAudioPlayer?
     
     var body: some View {
-        VStack {
-            Text("Prendi la pillola")
-                .font(.headline)
-                .padding()
+        ZStack {
+            (taskCompleted ? Color.green : Color.black)
+                .ignoresSafeArea()
             
-            if taskCompleted {
-                Text("Completato! ✅")
-                    .foregroundColor(.green)
-                    .font(.subheadline)
-            } else {
-                Button(action: {
-                    taskCompleted = true
-                    playSound()
-                    scheduleNotification()
-                }) {
-                    Text("Segna come fatto")
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+            VStack {
+                Text("Prendi la pillola")
+                    .font(.headline)
+                    .padding()
+                
+                if taskCompleted {
+                    Text("Completato! ✅")
+                        .foregroundColor(.black)
+                        .font(.subheadline)
+                } else {
+                    Button(action: {
+                        taskCompleted = true
+                        playSound()
+                        scheduleNotification()
+                    }) {
+                        Text("Segna come fatto")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
                 }
             }
         }
     }
-    
-    
     
     func playSound() {
         if let soundURL = Bundle.main.url(forResource: "success", withExtension: "wav") {
@@ -47,7 +50,7 @@ struct ContentView: View {
                 player = try AVAudioPlayer(contentsOf: soundURL)
                 player?.play()
             } catch {
-                print("Errore nella riproduzione del suono: \"(error) /")
+                print("Errore nella riproduzione del suono: \(error)")
             }
         }
     }
@@ -64,7 +67,6 @@ struct ContentView: View {
         UNUserNotificationCenter.current().add(request)
     }
 }
-
 
 #Preview {
     ContentView()
